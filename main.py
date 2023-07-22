@@ -3,6 +3,7 @@ import nltk
 from nltk.sentiment import SentimentIntensityAnalyzer
 import os
 import re
+import plotly.express as px
 
 # Download the vader_lexicon resource if not already present & assign the analyzer object
 nltk.download('vader_lexicon')
@@ -39,4 +40,14 @@ for file in os.listdir("diary/"):
 # Merge the list of scores and the list of dates into a list of tuples
 merged_list = [(dates[i], list_of_scores[i]) for i in range(0, len(dates))]
 
+# Create a list of the positive scores
+positive_list = []
+for score in list_of_scores:
+    positive_list.append(score["pos"])
+
+# Start streamlit elements
 st.title("Diary Tone")
+figure = px.line(x=dates, y=positive_list)
+st.plotly_chart(figure)
+st.text(positive_list)
+st.text(dates)
