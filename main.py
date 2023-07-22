@@ -41,11 +41,6 @@ for file in os.listdir("diary/"):
 merged_list = [(list_of_dates[i], list_of_scores[i]) for i in range(0, len(list_of_dates))]
 merged_list = sorted(merged_list)
 
-# Create a list of the positive scores
-# positive_list = []
-# for score in list_of_scores:
-#     positive_list.append(score["pos"])
-
 positive_list = []
 for pair in merged_list:
     positive_list.append(pair[1]["pos"])
