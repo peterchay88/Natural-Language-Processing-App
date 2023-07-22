@@ -10,22 +10,22 @@ analyzer = SentimentIntensityAnalyzer()
 
 # Reading all the text files at once
 def read_text_file(file_path):
-    read_text = ""
     with open(file_path, 'r') as f:
         slash_index = file_path.find("/")
         txt_name = file_path[slash_index +1:]
-        read_text += f"{txt_name}\n{f.read()}"
-        return read_text
+        read_text = f"{txt_name}\n{f.read()}"
+    return read_text
 
 
+diary_text = ""
 for file in os.listdir("diary/"):
     try:
         if file.endswith(".txt"):
             file_path = f"diary/{file}"
-            diary_text = read_text_file(file_path)
+            diary_text += read_text_file(file_path)
     except FileNotFoundError:
         print("could not read")
 
-print(diary_text)
-st.title("Diary Tone")
 
+st.title("Diary Tone")
+st.text(diary_text)
