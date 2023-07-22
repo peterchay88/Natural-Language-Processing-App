@@ -27,7 +27,7 @@ for file in os.listdir("diary/"):
 
 # Using Regular Expression to list dates from the title of the text files
 pattern = re.compile("2023-10-[0-9]+")
-dates = re.findall(pattern, diary_text)
+list_of_dates = re.findall(pattern, diary_text)
 
 # creating a list of scores from the text files
 list_of_scores = []
@@ -38,16 +38,34 @@ for file in os.listdir("diary/"):
         list_of_scores.append(analyzer.polarity_scores(diary_text))
 
 # Merge the list of scores and the list of dates into a list of tuples
-merged_list = [(dates[i], list_of_scores[i]) for i in range(0, len(dates))]
+merged_list = [(list_of_dates[i], list_of_scores[i]) for i in range(0, len(list_of_dates))]
+merged_list = sorted(merged_list)
 
 # Create a list of the positive scores
+# positive_list = []
+# for score in list_of_scores:
+#     positive_list.append(score["pos"])
+
 positive_list = []
-for score in list_of_scores:
-    positive_list.append(score["pos"])
+for pair in merged_list:
+    positive_list.append(pair[1]["pos"])
+
+negative_list = []
+for pair in merged_list:
+    negative_list.append(pair[1]["neg"])
+
+dates = []
+for pair in merged_list:
+    dates.append(pair[0])
 
 # Start streamlit elements
 st.title("Diary Tone")
-figure = px.line(x=dates, y=positive_list)
-st.plotly_chart(figure)
-st.text(positive_list)
-st.text(dates)
+
+positive_figure = px.line(x=dates, y=positive_list, labels={"x": "Date", "y": "Score"}, title="Positive Graph")
+positive_graph = st.plotly_chart(positive_figure)
+
+negative_figure = px.line(x=dates, y=negative_list, labels={"x": "Date", "y": "Score"}, title="Negative Graph")
+negative_graph = st.plotly_chart(negative_figure)
+
+
+
